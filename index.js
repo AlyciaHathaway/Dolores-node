@@ -1,8 +1,8 @@
 const http = require('http')
 const PORT = 7000
+const APP = require('./app')
+const server = new APP()
 
-http.createServer((request, reponse)=> {
-    reponse.end('Hello World')
-}).listen(PORT, ()=> {
+http.createServer(server.initServer).listen(PORT, ()=> {
     console.log(`server listening on port ${PORT}`)
 })
