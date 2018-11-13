@@ -17,7 +17,7 @@ class APP {
             // 每个请求进来的核心逻辑，根据 url 进行代码分发
             let { url } = request
             let body = staticServer(url)
-            
+            response.writeHead(200, 'Success', {'X-Powered-By': 'Node.js'})
             response.end(body)
         }
             
