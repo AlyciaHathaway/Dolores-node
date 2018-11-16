@@ -6,5 +6,5 @@ module.exports = (url)=> {
         '/user.action': ['Dolores', 'Joyce', 'Family']
     }
 
-    return apiMap[url]
+    return Promise.resolve(apiMap[url])
 }
