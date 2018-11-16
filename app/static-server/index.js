@@ -1,4 +1,4 @@
-
+// 静态资源服务
 const fs = require('fs')
 const path = require('path')
 
