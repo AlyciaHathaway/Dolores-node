@@ -16,11 +16,10 @@ class APP {
 
         return (request, response)=> {
             // 每个请求进来的核心逻辑，根据 url 进行代码分发
-            // let url = request.url
-            let { url } = request
+            let url = request.url
             // Don't repeat yourself
             // 返回的字符串或者 buffer
-            apiServer(url).then((value)=> {
+            apiServer(request).then((value)=> {
                 if (!value) {
                     // 如果 api 里拿不到值，则说明是静态资源请求
                     return staticServer(url)

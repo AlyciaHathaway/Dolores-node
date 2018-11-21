@@ -16,10 +16,13 @@ setTimeout(function() {
             console.log(error)
         },
     })
-
+    // 模拟 post
     $.ajax({
         url: '/list.action',
-        method: 'get',
+        method: 'post',
+        data: {
+            'name': 'Frank'
+        },
         // 返回数组
         success: function(array) {
             var liString = array.map(function(items) {
