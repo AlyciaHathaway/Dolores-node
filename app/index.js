@@ -5,6 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const staticServer = require('./static-server')
 const apiServer = require('./api')
+const urlParser = require('./url-parser')
 
 class APP {
     constructor() {
@@ -16,13 +17,21 @@ class APP {
 
         return (request, response)=> {
             // 每个请求进来的核心逻辑，根据 url 进行代码分发
-            let url = request.url
+            let {url, method} = request
             // Don't repeat yourself
             // 返回的字符串或者 buffer
-            apiServer(request).then((value)=> {
+            request.context = {
+                body: '',
+                query: '',
+                method: 'get'
+            }
+
+            urlParser(request).then(()=> {
+                return apiServer(request)
+            }).then((value)=> {
                 if (!value) {
                     // 如果 api 里拿不到值，则说明是静态资源请求
-                    return staticServer(url)
+                    return staticServer(request)
                 }else {
                     // 如果 api 里有对应值，则是 ajax 请求
                     return value

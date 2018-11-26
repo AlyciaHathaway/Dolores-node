@@ -8,8 +8,8 @@ let getPath = (url)=> {
     // 注意，${url}前面要加点才能访问到这个路径
     return path.resolve(process.cwd(), 'public', `.${url}`)
 }
-let staticFunction = (url)=> {
-
+let staticFunction = (request)=> {
+    let {url} = request
     return new Promise((resolve, reject)=> {
         if (url === '/') {
             url = '/index.html'
