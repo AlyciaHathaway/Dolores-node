@@ -8,8 +8,9 @@ let getPath = (url)=> {
     // 注意，${url}前面要加点才能访问到这个路径
     return path.resolve(process.cwd(), 'public', `.${url}`)
 }
-let staticFunction = (request)=> {
-    let {url} = request
+let staticFunction = (context)=> {
+    let {url} = context.req
+    let {resContext} = context
     return new Promise((resolve, reject)=> {
         if (url === '/') {
             url = '/index.html'
@@ -17,9 +18,10 @@ let staticFunction = (request)=> {
         let _path = getPath(url)
         let body = fs.readFile(_path, (err, data)=> {
             if (err) {
-                reject(`${err.stack}`)
+                resContext.body = `NOT FOUND ${err.stack}`
             }
-            resolve(data)
+            resContext.body = data
+            resolve()
         })
     })
 }

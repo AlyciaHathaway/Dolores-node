@@ -26,12 +26,25 @@ class APP {
                 method: 'get'
             }
 
-            urlParser(request).then(()=> {
-                return apiServer(request)
+            let context = {
+                req: request,
+                reqContext: {
+                    body: '', // POST 请求的数据
+                    query: {} // 处理客户端 GET 请求
+                },
+                res: response,
+                resContext: {
+                    headers: {}, // response 的返回报文
+                    body: '' // 返回给前端的内容区
+                }
+            }
+
+            urlParser(context).then(()=> {
+                return apiServer(context)
             }).then((value)=> {
                 if (!value) {
                     // 如果 api 里拿不到值，则说明是静态资源请求
-                    return staticServer(request)
+                    return staticServer(context)
                 }else {
                     // 如果 api 里有对应值，则是 ajax 请求
                     return value
