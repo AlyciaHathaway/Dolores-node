@@ -20,11 +20,6 @@ class APP {
             let {url, method} = request
             // Don't repeat yourself
             // 返回的字符串或者 buffer
-            request.context = {
-                body: '',
-                query: '',
-                method: 'get'
-            }
 
             let context = {
                 req: request,
@@ -39,33 +34,21 @@ class APP {
                 }
             }
 
+            // Promise.resolve(参数) ==> 通过 context 对象来传递
+
             urlParser(context).then(()=> {
                 return apiServer(context)
-            }).then((value)=> {
-                if (!value) {
-                    // 如果 api 里拿不到值，则说明是静态资源请求
-                    return staticServer(context)
-                }else {
-                    // 如果 api 里有对应值，则是 ajax 请求
-                    return value
-                }
-            }).then((value)=> {
+            }).then(()=> {
+                return staticServer(context)
+            }).then(()=> {
 
                 let base = {'X-powered-by': 'Node.js'}
-                let body = ''
-                // 返回静态资源，格式为 buffer
-                if (value instanceof Buffer) {
-                    body = value
-                }else {
-                    // 返回 api 的数组
-                    body = JSON.stringify(value)
-                    let finalHeader = Object.assign(base, {
-                        'Content-Type': 'application/json'
-                    })
-                    response.writeHead(200, 'resolve ok', finalHeader)
-                }
+                let {body, headers} = context.resContext
+
+                response.writeHead(200, 'resolve ok', Object.assign(base, headers))
                 response.end(body)
             })
+
 
 
             // let body = ''

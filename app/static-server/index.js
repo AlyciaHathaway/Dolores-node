@@ -12,17 +12,22 @@ let staticFunction = (context)=> {
     let {url} = context.req
     let {resContext} = context
     return new Promise((resolve, reject)=> {
-        if (url === '/') {
-            url = '/index.html'
-        }
-        let _path = getPath(url)
-        let body = fs.readFile(_path, (err, data)=> {
-            if (err) {
-                resContext.body = `NOT FOUND ${err.stack}`
+        if (!url.match('action')) {
+            if (url === '/') {
+                url = '/index.html'
             }
-            resContext.body = data
+            let _path = getPath(url)
+            let body = fs.readFile(_path, (err, data)=> {
+                if (err) {
+                    resContext.body = `NOT FOUND ${err.stack}`
+                }
+                resContext.body = data
+                resolve()
+            })
+        }else {
             resolve()
-        })
+        }
+        
     })
 }
 

@@ -6,6 +6,7 @@ setTimeout(function() {
         method: 'get',
         // 返回数组
         success: function(array) {
+            array = JSON.parse(array)
             var liString = array.map(function(items) {
                 return '<li>' + items + '</li>'
             }).join('')
@@ -28,6 +29,7 @@ setTimeout(function() {
         ]),
         // 返回数组
         success: function(array) {
+            array = JSON.parse(array)
             var liString = array.map(function(items) {
                 return '<li>' + items + '</li>'
             }).join('')

@@ -3,6 +3,7 @@
 module.exports = (context)=> {
     let {url, method} = context.req
     let {resContext, reqContext} = context
+    let {res} = context
 
     let apiMap = {
         '/list.action': ['心理学', '三只松鼠', 'Mongodb'],
@@ -13,12 +14,16 @@ module.exports = (context)=> {
     
     return Promise.resolve({
         then: (resolve, reject)=> {
-            if (method === 'get') {
-                resContext.body = apiMap[url]
-                return Promise.resolve()
-            }else {
-                let {body} = reqContext
-                resContext.body = body
+            if (url.match('action')) {
+                if (method === 'get') {
+                    resContext.body = JSON.stringify(apiMap[url])
+                }else {
+                    let {body} = reqContext
+                    resContext.body = JSON.stringify(body)
+                }
+                resContext.headers = Object.assign(resContext.headers, {
+                    'Contet-Type': 'application/json'
+                })
             }
             resolve()
         }

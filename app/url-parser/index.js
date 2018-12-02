@@ -22,7 +22,7 @@ module.exports = (context)=> {
                 // internal buffer ===> 拿出来 ===> end
                 // 于是仓库被清空，内存被释放
                 // paused ===> flow
-                request.on('data', (chunk)=> {
+                context.req.on('data', (chunk)=> {
                     data += chunk
                 }).on('end', ()=> {
                     reqContext.body = JSON.parse(data) // body
