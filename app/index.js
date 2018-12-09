@@ -44,7 +44,7 @@ class APP {
 
                 let base = {'X-powered-by': 'Node.js'}
                 let {body, headers} = context.resContext
-
+                // writeHead 会覆盖 setHeader 里相同的 key/value
                 response.writeHead(200, 'resolve ok', Object.assign(base, headers))
                 response.end(body)
             })
