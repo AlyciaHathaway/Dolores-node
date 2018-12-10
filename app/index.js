@@ -3,13 +3,26 @@
 
 const fs = require('fs')
 const path = require('path')
-const staticServer = require('./static-server')
-const apiServer = require('./api')
-const urlParser = require('./url-parser')
 
 class APP {
     constructor() {
-
+        this.middlewareArr = []
+        // 设计一个空的 promise
+        this.middlewareChain = Promise.resolve()
+    }
+    use(middleware) {
+        this.middlewareArr.push(middleware)
+    }
+    // 创建 promise 链条
+    conposeMiddleware(context) {
+        // 根据中间件数组创建 promise 链条
+        let {middlewareArr} = this
+        for (let middleware of middlewareArr) {
+            this.middlewareChain = this.middlewareChain.then(()=> {
+                return middleware(context)
+            })
+        }
+        return this.middlewareChain
     }
     // 高阶函数
     initServer() {
@@ -35,19 +48,17 @@ class APP {
             }
 
             // Promise.resolve(参数) ==> 通过 context 对象来传递
-
-            urlParser(context).then(()=> {
-                return apiServer(context)
-            }).then(()=> {
-                return staticServer(context)
-            }).then(()=> {
-
-                let base = {'X-powered-by': 'Node.js'}
-                let {body, headers} = context.resContext
-                // writeHead 会覆盖 setHeader 里相同的 key/value
-                response.writeHead(200, 'resolve ok', Object.assign(base, headers))
-                response.end(body)
-            })
+            this.conposeMiddleware(context)
+                .then(()=> {
+                    let base = {'X-powered-by': 'Node.js'}
+                    let {body, headers} = context.resContext
+                    // writeHead 会覆盖 setHeader 里相同的 key/value
+                    response.writeHead(200, 'resolve ok', Object.assign(base, headers))
+                    response.end(body)
+                })
+                .catch((err)=> {
+                    console.log(err)
+                })
 
 
 
