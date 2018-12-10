@@ -3,7 +3,11 @@
 
 const fs = require('fs')
 const path = require('path')
-
+// 框架的好处:
+// 1. 每一块中间件只需要关注修改 context 对象即可，彼此独立
+// 2. 设计了 use 和 composeMiddleware 两个 API，用来创建 Promise 链条
+// 3. 开发者可以专注于中间件开发，而不需要关注具体的逻辑
+// 4. 函数体可以百年不变
 class APP {
     constructor() {
         this.middlewareArr = []
